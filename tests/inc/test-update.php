@@ -325,12 +325,13 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 
 		$test_post = get_term($term_ids[0], 'prominence', 'ARRAY_A');
 		$this->assertEquals('If you are using a "Big story" homepage layout, add this label to a post to make it the top story on the homepage', $test_post['description']);
-
-#		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	function test_largo_force_settings_update() {
-		$this->markTestIncomplete('This test has not yet been implemented');
+		of_reset_options();
+		largo_force_settings_update();
+		// You should do this for every setting in largo_force_settings_update's $options array
+		$this->assertEquals('1', of_get_option('show_sticky_nav'));
 	}
 
 	// Test functions related to the WP admin workflow views
