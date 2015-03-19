@@ -420,7 +420,7 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		$this->assertNull($test); // get_term returns null when the term is not found http://codex.wordpress.org/Function_Reference/get_term
 		$this->assertEquals($deleted, $ret[0]['term_id']); // The deleted term should be the one that was created
 		unset($test, $ret);
-		wp_delete_term( $deleted, 'prominence');
+		wp_delete_term($deleted, 'prominence');
 	}
 
 	function test_largo_enable_if_series() {
@@ -428,7 +428,41 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		// If the series taxonomy exists but has 0 series in it, of_get_option('series_enabled') is not set
 		// If the series taxonomy exists and has >0 series in it, of_get_option('series_enabled') is set to a truthy value.
 
-		largo_enable_if_series();
+		$terms = get_terms('series', array(
+				'hide_empty' => false,
+				'fields' => 'all'
+			));
+		$this->assertEquals(array(), $terms); // just making sure that there are no terms
+
+		// Testing that series are not enabled when there are no series
+		$ret = largo_enable_if_series();
+		$this->assertFalse(of_get_option('series_enabled'));
+		$this->assertFalse($ret);
+		unset($ret);
+
+		// create a series
+		$series = $this->factory->term->create(array(
+			'taxonomy' => 'series',
+			'name' => 'In Which A Series Is Created',
+			'slug' => 'series',
+		));
+
+		// Test that series are enabled when there is a series
+		$ret = largo_enable_if_series();
+		$this->assertEquals('1', of_get_option('series_enabled'));
+		$this->assertTrue($ret);
+		unset($ret);
+
+		// What if a series existed at one point in the past but was then deleted?
+		wp_delete_term($series, 'series');
+		// But assuming that this hasn't been set yet
+		of_set_option('series_enabled', null);
+
+		$ret = largo_enable_if_series();
+		$this->assertFalse(of_get_option('series_enabled'));
+		$this->assertFalse($ret);
+		unset($ret);
+
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
