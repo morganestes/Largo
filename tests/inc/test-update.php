@@ -456,12 +456,15 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		// What if a series existed at one point in the past but was then deleted?
 		wp_delete_term($series, 'series');
 		// But assuming that this hasn't been set yet
-		of_set_option('series_enabled', null);
+		of_reset_options();
 
 		$ret = largo_enable_if_series();
 		$this->assertFalse(of_get_option('series_enabled'));
 		$this->assertFalse($ret);
-		unset($ret);
+
+		// cleanup
+		unset($ret, $terms);
+		of_reset_options();
 
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
@@ -471,8 +474,54 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		// If the post type 'cftl-tax-landing' exists but there are no posts, then the options are not set.
 		// If the post type 'cftl-tax-landing' exists and there are posts, then the options are set to a truthy value.
 		// options: ['series_enabled', 'custom_landing_enabled']
-		largo_enable_series_if_landing_page();
-		$this->markTestIncomplete('This test has not been implemented yet.');
+
+		// Without a CFTL landing page
+		$ret = largo_enable_series_if_landing_page();
+
+		$this->assertNull($ret, "largo_enable_series_if_landing_page should be returning nothing here, because cftl is not set");
+		$this->assertFalse(of_get_option('series_enabled'));
+		$this->assertFalse(of_get_option('custom_landing_enabled'));
+		unset($ret);
+		of_reset_options();
+
+		// Create the landing page post type
+		register_post_type('cftl-tax-landing');
+		$landing = $this->factory->post->create_and_get(array(
+			'post_type' => 'cftl-tax-landing'
+		));
+		var_log($landing);
+
+		$ret = largo_enable_series_if_landing_page();
+
+		$this->assertFalse($ret, "No pages are found, so largo_enable_series_if_landing_page should return false");
+		$this->assertFalse(of_get_option('series_enabled'));
+		$this->assertFalse(of_get_option('custom_landing_enabled'));
+		unset($ret);
+		of_reset_options();
+
+		// Create a landing page
+		$pageid = wp_insert_post(array(
+			'post_type' => 'cftl-tax-landing',
+			'post_status' => 'publish',
+			'page_template' => 'series-landing.php',
+			'post_parent' => 0,
+			'menu_order' => 0,
+			'_wp_page_template' => 'series-landing.php'
+		));
+
+		$args = array(
+			'post_type' => 'cftl-tax-landing'
+		);
+		$pages = get_pages($args);
+		var_log($pages); // should be an array of posts, not 'false'
+
+		$ret = largo_enable_series_if_landing_page();
+
+		$this->assertTrue($ret, "A cftl page has been created, so largo_enable_series_if_landing_page should return true");
+		$this->assertEquals('1', of_get_option('series_enabled'));
+		$this->assertEquals('1', of_get_option('custom_landing_enabled'));
+		unset($ret);
+		of_reset_options();
 	}
 }
 
