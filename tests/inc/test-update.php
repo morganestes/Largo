@@ -377,8 +377,50 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		// This deletes the following terms by slug: "top-story-*"
 		// This does not delete the following term: slug: "top-story" name: "Homepage Top Story"
 
-		largo_remove_topstory_prominence_term();
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		// create a prominence term that will be transitioned, because it is the old format
+		$transitioned = $this->factory->term->create(array(
+			'taxonomy' => 'prominence',
+			'name' => 'Top Story',
+			'slug' => 'top-story',
+		));
+		$ret = largo_remove_topstory_prominence_term();
+
+		$test = get_term($transitioned, 'prominence', 'ARRAY_A');
+		$this->assertEquals('Homepage Top Story', $test['name']);
+		$this->assertEquals('top-story', $test['slug']);
+		$this->assertEquals(array(), $ret); // No terms should be deleted
+		unset($test);
+		wp_delete_term( $transitioned, 'prominence');
+
+		// Create one that will be passed, because it is a term that we want to keep
+		$passed = $this->factory->term->create(array(
+			'taxonomy' => 'prominence',
+			'name' => 'Homepage Top Story',
+			'slug' => 'top-story',
+		));
+		$ret = largo_remove_topstory_prominence_term();
+
+		$test = get_term($passed, 'prominence', 'ARRAY_A');
+
+		$this->assertEquals('Homepage Top Story', $test['name']);
+		$this->assertEquals('top-story', $test['slug']);
+		$this->assertEquals(array(), $ret); // No terms should be deleted
+		unset($test, $ret);
+		wp_delete_term( $passed, 'prominence');
+
+		// Create one that will be deleted
+		$deleted = $this->factory->term->create(array(
+			'taxonomy' => 'prominence',
+			'name' => 'Homepage Top Story',
+			'slug' => 'top-story-2',
+		));
+		$ret = largo_remove_topstory_prominence_term();
+
+		$test = get_term($passed, 'prominence', 'ARRAY_A');
+		$this->assertNull($test); // get_term returns null when the term is not found http://codex.wordpress.org/Function_Reference/get_term
+		$this->assertEquals($deleted, $ret[0]['term_id']); // The deleted term should be the one that was created
+		unset($test, $ret);
+		wp_delete_term( $deleted, 'prominence');
 	}
 
 	function test_largo_enable_if_series() {
