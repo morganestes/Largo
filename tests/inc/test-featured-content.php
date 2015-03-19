@@ -87,13 +87,11 @@ class FeaturedContentTestFunctions extends WP_UnitTestCase {
 
 		// This is on the "cat1" category
 		$this->go_to('?cat=' . $this->cat1);
+		$this->assertTrue(is_category(), "This test is not currently running as a category page, which means that it is useless");
 		$ret = get_posts(array('category' => $this->cat1));
 #		$ret = largo_have_featured_posts();
-		var_log($ret); // it's not returning the posts I expect it to, but it's in the correct category.
-		var_log("count: " . count($ret)); // This should be 14, it's actually 5.
-
-
-		$this->assertTrue(is_category(), "This test is not currently running as a category page, which means that it is useless");
+#		var_log($ret); // it's not returning the posts I expect it to, but it's in the correct category.
+#		var_log("count: " . count($ret)); // This should be 14, it's actually 5.
 
 		// but posts should not be in $this->cat1_no_prom
 
