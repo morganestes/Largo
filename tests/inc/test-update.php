@@ -470,6 +470,8 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 	}
 
 	function test_largo_enable_series_if_landing_page() {
+		require_once dirname(__FILE__) . '/../../inc/wp-taxonomy-landing/taxonomy-landing.php';
+	
 		// If the post type 'cftl-tax-landing' does not exist, then the options are not set.
 		// If the post type 'cftl-tax-landing' exists but there are no posts, then the options are not set.
 		// If the post type 'cftl-tax-landing' exists and there are posts, then the options are set to a truthy value.
@@ -478,18 +480,40 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		// Without a CFTL landing page
 		$ret = largo_enable_series_if_landing_page();
 
-		$this->assertNull($ret, "largo_enable_series_if_landing_page should be returning nothing here, because cftl is not set");
+		$this->assertNull($ret, "largo_enable_series_if_landing_page should be returning nothing here, because cftl-tax-landing is not yet a page type");
 		$this->assertFalse(of_get_option('series_enabled'));
 		$this->assertFalse(of_get_option('custom_landing_enabled'));
 		unset($ret);
 		of_reset_options();
 
 		// Create the landing page post type
-		register_post_type('cftl-tax-landing');
-		$landing = $this->factory->post->create_and_get(array(
-			'post_type' => 'cftl-tax-landing'
-		));
-		var_log($landing);
+		register_post_type('cftl-tax-landing', array(
+			'labels' => array(
+				'name' => __('Landing Pages', 'cf-tax-landing'),
+				'singular_name' => __('Landing Page', 'cf-tax-landing'),
+				'add_new' => _x('Add New', 'cftl-tax-landing', 'cf-tax-landing'),
+				'add_new_item' => __('Add New Landing Page', 'cf-tax-landing'),
+				'edit_item' => __('Edit Landing Page', 'cf-tax-landing'),
+				'new_item' => __('New Landing Page', 'cf-tax-landing'),
+				'all_items' => __('All Landing Pages', 'cf-tax-landing'),
+				'view_item' => __('View Landing Page', 'cf-tax-landing'),
+				'search_items' => __('Search Landing Pages', 'cf-tax-landing'),
+				'not_found' =>  __('No Landing Pages found', 'cf-tax-landing'),
+				'not_found_in_trash' => __('No Landing Pages found in Trash', 'cf-tax-landing'),
+				'parent_item_colon' => '',
+				'menu_name' => __('Landing Pages', 'cf-tax-landing')
+			),
+			'supports' => array(
+				'title',
+				'thumbnail',
+			),
+			'public' => false,
+			'exclude_from_search' => true,
+			'show_in_nav_menus' => false,
+			'show_ui' => true,
+			'show_in_menu' => true,
+			'hierarchical' => true,
+		)); // Yes, the "optional" args array is needed. If you don't have it, this doesn't work. 
 
 		$ret = largo_enable_series_if_landing_page();
 
@@ -500,26 +524,39 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		of_reset_options();
 
 		// Create a landing page
+
+		$this->markTestIncomplete('update_post_meta does not work in unit tests, it seems.');
+
 		$pageid = wp_insert_post(array(
 			'post_type' => 'cftl-tax-landing',
 			'post_status' => 'publish',
 			'page_template' => 'series-landing.php',
-			'post_parent' => 0,
-			'menu_order' => 0,
 			'_wp_page_template' => 'series-landing.php'
 		));
+		$this->go_to("/?page_id=$pageid");
+		$this->assertQueryTrue('is_page', 'is_singular');
 
 		$args = array(
 			'post_type' => 'cftl-tax-landing'
 		);
 		$pages = get_pages($args);
-		var_log($pages); // should be an array of posts, not 'false'
-
+		var_log($pages);
 		$ret = largo_enable_series_if_landing_page();
 
 		$this->assertTrue($ret, "A cftl page has been created, so largo_enable_series_if_landing_page should return true");
 		$this->assertEquals('1', of_get_option('series_enabled'));
 		$this->assertEquals('1', of_get_option('custom_landing_enabled'));
+		unset($ret);
+		of_reset_options();
+
+		// If the landing pages were deleted
+		wp_delete_post($pageid);
+
+		$ret = largo_enable_series_if_landing_page();
+
+		$this->assertFalse($ret, "No pages are found, so largo_enable_series_if_landing_page should return false");
+		$this->assertFalse(of_get_option('series_enabled'));
+		$this->assertFalse(of_get_option('custom_landing_enabled'));
 		unset($ret);
 		of_reset_options();
 	}
