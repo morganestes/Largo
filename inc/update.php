@@ -667,8 +667,9 @@ function largo_enable_series_if_landing_page() {
 			'post_type' => 'cftl-tax-landing'
 		);
 		$pages = get_pages($args);
-		if ( $pages !== false ) {
-			// get_pages returns false if no pages found, so if it's not false then there are probably cftl-tax-landing pages
+		if ( $pages !== false && $pages !== array() ) {
+			// get_pages returns false if there's an error
+			// get_pages returns array() if there are no posts
 			of_set_option('series_enabled', '1');
 			of_set_option('custom_landing_enabled', '1');
 			return true;
