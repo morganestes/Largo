@@ -525,22 +525,13 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 
 		// Create a landing page
 
-		$this->markTestIncomplete('update_post_meta does not work in unit tests, it seems.');
-
 		$pageid = wp_insert_post(array(
 			'post_type' => 'cftl-tax-landing',
 			'post_status' => 'publish',
 			'page_template' => 'series-landing.php',
 			'_wp_page_template' => 'series-landing.php'
 		));
-		$this->go_to("/?page_id=$pageid");
-		$this->assertQueryTrue('is_page', 'is_singular');
 
-		$args = array(
-			'post_type' => 'cftl-tax-landing'
-		);
-		$pages = get_pages($args);
-		var_log($pages);
 		$ret = largo_enable_series_if_landing_page();
 
 		$this->assertTrue($ret, "A cftl page has been created, so largo_enable_series_if_landing_page should return true");
