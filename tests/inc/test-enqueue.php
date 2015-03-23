@@ -70,11 +70,40 @@ class EnqueueTestFunctions extends WP_UnitTestCase {
 		largo_footer_js();
 	}
 
-	function largo_google_analytics() {
-		$this->expectOutputRegex('/_gaq/');
-		$this->expectOutputRegex(bloginfo('name'));
-		$this->expectOutputRegex(parse_url( home_url(), PHP_URL_HOST ));
+	function test_largo_google_analytics_as_admin() {
+		// When running as Admin (which tests are), this function should output nothing
 
+		ob_start();
 		largo_google_analytics();
+		$ret = ob_get_clean();
+		$this->assertEquals('', $ret);
+		unset($ret);
+	}
+
+	function test_largo_google_analytics_as_user() {
+		$this->markTestSkipped("wp_set_current_user cannot be used to revert to the omnipotent test-running user, so the code here testing largo_google_analytics will actually break several tests following after this. ");
+		/*
+		// Preserve the admin user
+		$admin = wp_get_current_user();
+
+		// Let's create a new user to use
+		$test_user = $this->factory->user->create(array( 'user_login' => 'test', 'role' => 'subscriber'));
+		$user_id_role = wp_set_current_user($test_user);
+		$user_id_role->set_role('subscriber');
+
+		// Perform the actual test
+		ob_start();
+		largo_google_analytics();
+		$ret = ob_get_clean();
+
+		$this->assertEquals(1, preg_match('/' . preg_quote('_gaq') . '/', $ret ), "Unprivileged users should receive GA tags" );
+		$this->assertTrue(preg_match('/' . preg_quote(bloginfo('name')) . '/', $ret ), "GA output should have the site name" );
+		$this->assertTrue(preg_match('/' . preg_quote(parse_url( home_url(), PHP_URL_HOST )) . '/', $ret), "GA output should have the site URL");
+
+		// Reset to the previous user, based on https://codex.wordpress.org/Function_Reference/wp_set_current_user
+		wp_set_current_user($admin->ID, $admin->user_login);
+		wp_set_auth_cookie($admin->ID);
+		do_action( 'wp_login', $admin->user_login);
+		*/
 	}
 }
