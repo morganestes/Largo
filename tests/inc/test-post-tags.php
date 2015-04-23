@@ -121,7 +121,94 @@ class PostTagsTestFunctions extends WP_UnitTestCase {
 		$this->markTestIncomplete("This test has not yet been implemented.");
 	}
 
+	/**
+	 * Test largo_excerpt
+	 *
+	 * function largo_excerpt(
+	 *   $the_post=null,
+	 *   $sentence_count = 5,
+	 *   $use_more = true,
+	 *   $more_link = '',
+	 *   $echo = true,
+	 *   $strip_tags = true,
+	 *   $strip_shortcodes = true
+	 * )
+	 */
 	function test_largo_excerpt() {
+		$id = $this->factory->post->create();
+		wp_update_post(
+			array(
+				'ID' => $id,
+				'post_content' => '<span class="first-letter"><b>S</span>entence</b> <i>one<i>. Sentence two. Sentence three. Sentence four. Sentence five. Sentence six. Sentence seven. Sentence eight. Sentence nine. Sentence ten. <!--more--> This should never display.',
+				'post_excerpt' => null // We want to set this ourselvse, and have it be empty for the time being.
+			)
+		);
+		
+		/**
+		 * Test that the echo variable is respected
+		 */
+		// echo = true
+		ob_start();
+		$ret = largo_excerpt($id, 5,true, '', true);
+		$echo = ob_get_clean();
+		$this->assertRegExp('/[.*]+/', $ret); // The $output is always returned
+		$this->assertRegExp('/[.*]+/', $echo); // We want to make sure that it all works
+		
+		ob_start();
+		$ret = largo_excerpt($id, 5,true, '', false);
+		$echo = ob_get_clean();
+		$this->assertRegExp('/[.*]+/', $ret);
+		$this->assertEmpty($echo); // With echo to false, this should not have anything in it
+		
+		/**
+		 *  Test the sentence count output.
+		 *
+		 * We're disabling the more link for this round of tests.
+		 * Also, strip_tags is on by default. 
+		 */
+		ob_start();
+		$ret = largo_excerpt($id, 1, false);
+		ob_end_clean();
+		$this->assertEquals("<p>Sentence one. </p>\n", $ret, "Only one sentence should be output when the count of sentences is 1.");
+
+		ob_start();
+		$ret = largo_excerpt($id, 5, false);
+		ob_end_clean();
+		$this->assertEquals("<p>Sentence one. Sentence two. Sentence three. Sentence four. Sentence five. </p>\n", $ret, "Only five sentences should be output when the count of sentences is 5.");
+		
+		ob_start();
+		$ret = largo_excerpt($id, 11, false);
+		ob_end_clean();
+		$this->assertEquals("<p>Sentence one. Sentence two. Sentence three. Sentence four. Sentence five. Sentence six. Sentence seven. Sentence eight. Sentence nine. Sentence ten. This should never display. </p>\n", $ret, "11 sentences should be output when the count of sentences is 11.");
+		
+		/**
+		 * Test that if we're on the homepage and the post has a more tag, that gets used if there is no post excerpt
+		 */
+		$this->go_to('/'); // Go home
+		ob_start();
+		$ret = largo_excerpt($id, 1, false);
+		ob_end_clean();
+		$this->assertEquals("<p>Sentence one. Sentence two. Sentence three. Sentence four. Sentence five. Sentence six. Sentence seven. Sentence eight. Sentence nine. Sentence ten. </p>\n", $ret, "Only one sentence should be output when the count of sentences is 1.");
+		
+		// And now with an excerpt
+		wp_update_post(
+			array(
+				'ID' => $id,
+				'post_content' => '<span class="first-letter"><b>S</span>entence</b> <i>one<i>. Sentence two. Sentence three. Sentence four. Sentence five. Sentence six. Sentence seven. Sentence eight. Sentence nine. Sentence ten. <!--more--> This should never display.',
+				'post_excerpt' => 'Custom post excerpt!' // We want to set this ourselvse, and have it be empty for the time being.
+			)
+		);
+		
+		$this->go_to('/'); // Go home
+		ob_start();
+		$ret = largo_excerpt($id, 1, true, "Read More"); // $use_more must be set on the home page
+		var_log($ret);
+		ob_end_clean();
+		$this->assertEquals("<p>Custom post excerpt! </p>\n", $ret, "Custom post excerpt did not output.");
+		
+		// Test with a <!--more--> tag
+			// only on homepage should this count
+				// 
 		$this->markTestIncomplete("This test has not yet been implemented.");
 	}
 

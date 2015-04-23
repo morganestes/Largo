@@ -384,15 +384,12 @@ if ( ! function_exists( 'largo_excerpt' ) ) {
 
 		// if a post has a custom excerpt set, we'll use that
 		if ( $the_post->post_excerpt ) {
-			if ( !$use_more ) {
-				$content = apply_filters( 'get_the_excerpt', $the_post->post_excerpt );
-			} else {
-				$content = apply_filters( 'get_the_excerpt', $the_post->post_excerpt ) . ' <a href="' . get_permalink( $the_post->ID ) . '">' . $more_link . '</a>';
-			}
+			$content = apply_filters( 'get_the_excerpt', $the_post->post_excerpt );
 
 		// if we're on the homepage and the post has a more tag, use that
 		} else if ( is_home() && strpos( $the_post->post_content, '<!--more-->' ) ) {
 			$content = get_the_content( $more_link );
+			var_log($content);
 
 		// otherwise we'll just do our best and make the prettiest excerpt we can muster
 		} else {
@@ -414,6 +411,11 @@ if ( ! function_exists( 'largo_excerpt' ) ) {
 			$output .= strip_shortcodes( $content );
 		} else {
 			$output .= $content;
+		}
+
+		if ( $use_more && $more_link ) {
+			// Not if ( is_home() && strpos( $the_post->post_content, '<!--more-->' )
+			// if ( $use_more && $more_link )
 		}
 		$output .= '</p>';
 
