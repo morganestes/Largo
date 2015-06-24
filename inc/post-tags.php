@@ -361,7 +361,7 @@ if ( ! function_exists( 'largo_custom_wp_link_pages' ) ) {
  *
  * @param $post object the post
  * @param $sentence_count int the number of sentences to show
- * @param $use_more bool append read more link to end of output
+ * @param $use_more bool DEPRECATED: append read more link to end of output
  * @param $more_link string the text of the read more link
  * @param $echo bool echo the output or return it (default: echo)
  * @param $strip_tags|$strip_shortcodes bool
@@ -370,7 +370,7 @@ if ( ! function_exists( 'largo_custom_wp_link_pages' ) ) {
  * @since 0.3
  */
 if ( ! function_exists( 'largo_excerpt' ) ) {
-	function largo_excerpt( $the_post=null, $sentence_count = 5, $use_more = true, $more_link = '', $echo = true, $strip_tags = true, $strip_shortcodes = true ) {
+	function largo_excerpt( $the_post=null, $sentence_count = 5, $use_more = false, $more_link = '', $echo = true, $strip_tags = true, $strip_shortcodes = true ) {
 		$the_post = get_post($the_post); // Normalize it into a post object
 
 		// Save the global $post object and then push our current post object so that certain functions (get_the_content) will work
@@ -394,14 +394,14 @@ if ( ! function_exists( 'largo_excerpt' ) ) {
 		// otherwise we'll just do our best and make the prettiest excerpt we can muster
 		} else {
 			$content = largo_trim_sentences( $the_post->post_content, $sentence_count );
-			if ( $use_more )
-				$content .= '<a href="' . get_permalink( $the_post->ID ) . '">' . $more_link . '</a>';
 		}
 
 		$post = $_post; // Set it back
 
-		// optionally strip shortcodes and html, wrap everything in <p> tags
+		// wrap everything in <p> tags, optionally strip shortcodes and html
+
 		$output = '<p>';
+
 		if ( $strip_tags && $strip_shortcodes ) {
 			$output .= strip_tags( strip_shortcodes ( $content ) );
 		} else if ( $strip_tags ) {
@@ -413,10 +413,6 @@ if ( ! function_exists( 'largo_excerpt' ) ) {
 			$output .= $content;
 		}
 
-		if ( $use_more && $more_link ) {
-			// Not if ( is_home() && strpos( $the_post->post_content, '<!--more-->' )
-			// if ( $use_more && $more_link )
-		}
 		$output .= '</p>';
 
 		$output = apply_filters( 'the_content', $output );
