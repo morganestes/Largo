@@ -11,8 +11,8 @@ class largo_recent_comments_widget extends WP_Widget {
 	function largo_recent_comments_widget() {
 		/* Widget settings. */
 		$widget_ops = array(
-			'classname' 	=> 'largo-recent-comments',
-			'description' 	=> __('Show recent comments', 'largo'),
+			'classname' => 'largo-recent-comments',
+			'description' => __('Show recent comments', 'largo'),
 		);
 
 		/* Create the widget. */
@@ -66,7 +66,7 @@ class largo_recent_comments_widget extends WP_Widget {
 		if ( $comments ) {
 			foreach ( (array) $comments as $comment) {
 				$output .=  '<li class="recentcomments">';
-				$output .= '<p class="comment-excerpt">&ldquo;' . get_comment_excerpt() . '&rdquo;</p>';
+				$output .= '<p class="comment-excerpt">&ldquo;' . trim(get_comment_excerpt()) . '&rdquo;</p>';
 				$output .= '<p class="comment-meta">&mdash;&nbsp;' . get_comment_author_link() . ' on <a href="' . esc_url( get_comment_link($comment->comment_ID) ) . '">' . get_the_title($comment->comment_post_ID) . '</a></p>';
 				$output .= '</li>';
 			}
