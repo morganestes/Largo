@@ -270,13 +270,6 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		largo_deprecated_footer_widget();
 	}
 
-	function test_largo_deprecated_sidebar_widget() {
-		// prints a nag
-		// uses __
-		$this->expectOutputRegex('/[.*]+/'); // This is excessively greedy, it expects any output at all
-		largo_deprecated_sidebar_widget();
-	}
-
 	function test_largo_transition_nav_menus() {
 		// Test the function's ability to create the Main Navigation nav menu
 		$this->assertFalse(wp_get_nav_menu_object('Main Navigation'));
