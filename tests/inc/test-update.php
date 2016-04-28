@@ -323,6 +323,7 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 		$this->assertTrue(is_array($return));
 
 		$term9 = get_term_by('slug', 'term-9', 'prominence', 'ARRAY_A');
+		var_log($term9);
 		$this->assertEquals('Term 9 From Outer Space', $term9['description']);
 	}
 
