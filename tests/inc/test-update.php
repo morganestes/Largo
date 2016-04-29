@@ -318,16 +318,13 @@ class UpdateTestFunctions extends WP_UnitTestCase {
 			'slug' => 'term-9'
 		);
 		$term_descriptions = array('Term Description 9');
-		foreach ( $this->term_ids as $term_id ) {
-			var_log(get_term_by('id', $term_id, 'prominence' ));
-		}
 
 		$return = largo_update_prominence_term_description_single($update, $term_descriptions);
 		$this->assertTrue(is_array($return));
 
-		$term9 = get_term_by('slug', 'term-9', 'prominence', 'ARRAY_A');
+		$term9 = get_term_by('slug', 'term-9', 'prominence');
 		var_log($term9);
-		$this->assertEquals('Term 9 From Outer Space', $term9['description']);
+		$this->assertEquals('Term 9 From Outer Space', $term9->description);
 	}
 
 	function test_largo_update_prominence_term_descriptions() {
