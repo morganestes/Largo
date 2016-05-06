@@ -197,10 +197,10 @@ On Twitter you can create widgets for a user timeline, favorites, list, or searc
 Added Plugin Widgets
 --------------------
 
-INN builds and maintains several WordPress plugins that provide additional functionality and add their own widgets. For more information about the plugins and documentation on using their widgets see:
+INN builds and maintains several WordPress plugins that provide additional functionality and add their own widgets. For more information about the plugins and documentation on using these widgets see:
 
 - `Link Roundups plugin <https://wordpress.org/plugins/link-roundups/>`_
-- `Doubleclick for Wordpress plugin <https://github.com/INN/DoubleClick-for-WordPress/>`_
+- `Doubleclick for Wordpress plugin <https://wordpress.org/plugins/doubleclick-for-wp//>`_
 - `Analytic Bridge plugin <https://github.com/INN/analytic-bridge>`_
 
 Widgets Deprecated in 0.4x
