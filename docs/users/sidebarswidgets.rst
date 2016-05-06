@@ -134,23 +134,23 @@ Largo Recent Posts
 
 This is a powerful widget to show recent posts in various formats with the option to limit by category, tag, custom taxonomy term and/or author. This widget has many options that enable display of a filtered set of articles or excerpts based on criteria of your choosing. You can limit by author and/or category, and then further limit by tag. You can limit by a custom taxonomy like Post Prominence, Series, or Post Types (the latter two need to be enabled in **Appearance > Theme Options > Advanced**), and you can combine these filters as needed. 
 
-Limiting by taxonomies and their terms requires using the "slug" for each. To start with, here are the available taxonomies with their names and slugs:
+You can show posts by all authors and/or categories by using the dropdown menu in the widget settings. 
+
+Limiting by the custom taxonomies and their terms requires using the “slug” for the taxonomy in the Taxonomy field:
 
 ===============   ======================================================
-Taxonomy Name     Taxonomy Slug
+Custom Taxonomy   Taxonomy Slug
 ===============   ======================================================
-Categories        category
-Tags              post_tag
 Post Prominence   prominence
 Series            series
 Post Types        post-type
 ===============   ======================================================
 
-Each term within a taxonomy also has a name and a slug. For example, the slug for a tag of "social media" would be "social-media". You can find the slugs for the terms in any taxonomy by checking its settings page, which lists the names and their slugs.
+Each term within a taxonomy also has a slug. For example, the slug for a tag of "social media" would be "social-media". You can find the slugs for the terms in any taxonomy by checking its settings page, which lists the names and their slugs.
 
-If you want to limit by custom taxonomy, enter the taxonomy's slug in the Taxonomy field, and then the term's slug in the Term field. For example if you want to display Post Prominence content assigned to "Featured in Series", you'll enter "prominence" as the Taxonomy and "series-featured" as the Term. 
+Enter the custom taxonomy's slug in the Taxonomy field, and the term's slug in the Term field. For example if you want to display Post Prominence content assigned to "Featured in Series", you'll enter "prominence" as the Taxonomy and "series-featured" as the Term. 
 
-After setting the limits on the content you want displayed, you can adjust how it's displayed.  You can set how thumbnails, excerpts, bylines, and top terms are displayed, and add a More link to a URL. One additional setting may be very helpful: Depending on how you limit by taxonomy etc., you may want to select the option to Avoid Duplicate Posts which will cause this widget to skip any posts that are already shown elsewhere on the page.
+After setting the limits on the content you want displayed, you can adjust how it's displayed.  You can set how thumbnails, excerpts, bylines, and top terms are displayed, and add a More link to a URL. You may also want to select the option to **Avoid Duplicate Posts** which will cause this widget to skip any posts that are already shown elsewhere on the page.
 
 Largo Related Posts
 -------------------
@@ -201,6 +201,12 @@ If you have the **Link Roundups** plugin installed, this widget will display the
 
 For more on how this works see the `Link Roundups widget documentation <https://github.com/INN/link-roundups/blob/master/README.md>`_.
 
+Saved Links Widget
+------------------
+
+**Saved Links** is a part of the `Link Roundups Plugin <https://wordpress.org/plugins/link-roundups/>`_ that makes it easy to gather links from around the web and save them in WordPress. The Saved Links Widget allows you to create a list of links to pages anywhere on the web for display in a sidebar or other widget area.
+
+The Saved Links widget title defaults to "Recent Links" but you can change this as needed. You can set the number of Saved Links to display, adjust the excerpt length, show thumbnails of featured images, and add a More link with a url at the bottom of the widget.
 
 Widgets Deprecated in 0.4x
 =========================
