@@ -97,6 +97,11 @@ Largo Facebook Widget
 
 Shows a Facebook "like" box/feed. This will only work for Facebook Pages, which are by default public, not personal Facebook accounts. If you get an error message saying "Error: Not a valid Facebook Page url," it typically means the url is not a public Facebook Page.
 
+Largo Featured Posts Widget
+---------------------------
+
+Displays a list of posts from one of the **Post Prominence** terms with titles, optional thumbnail images, and excerpts. The widget title defaults to "In Case You Missed It" but this can be changed in the widget settings. You can set which Post Prominence term is used for display of posts, how many posts to show, how to display the thumbnail, and the excerpt length.
+
 Largo Follow
 ------------
 
