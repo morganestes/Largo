@@ -219,6 +219,20 @@ Widgets Deprecated in 0.5x
 
 - **Largo Featured Posts** - Now just use the Largo Recent Posts widget and limit to the desired term in the Prominence taxonomy.
 
+Default WordPress Widgets Disabled
+==================================
+
+Several standard WordPress widgets are deregistered (disabled) in Largo, since we provide alternative widgets with similar functionality more useful in the Largo theme. These widgets are deregistered in `inc/widgets.php` and include:
+
+- Pages
+- Calendar
+- Links
+- Tag Cloud
+- Meta
+- Recent Comments
+- RSS
+- Recent Posts
+
 Sidebar Options
 ===============
 
