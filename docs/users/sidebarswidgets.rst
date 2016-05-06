@@ -194,19 +194,14 @@ On Twitter you can create widgets for a user timeline, favorites, list, or searc
 
 *Note: In most cases the Largo Twitter Widget will work fine if you just set the Twitter Widget ID. As a fallback in case of errors loading scripts from Twitter, it's a good idea to also add the Twitter Username, List slug, and search query in the settings*.
 
-Largo Roundups Widget
----------------------
+Added Plugin Widgets
+--------------------
 
-If you have the **Link Roundups** plugin installed, this widget will display the most recent Link Roundup posts. You can change the number of posts to show, limit display to a category, and add a More link at the bottom of the widget. 
+INN builds and maintains several WordPress plugins that provide additional functionality and add their own widgets. For more information about the plugins and documentation on using their widgets see:
 
-For more on how this works see the `Link Roundups widget documentation <https://github.com/INN/link-roundups/blob/master/README.md>`_.
-
-Saved Links Widget
-------------------
-
-**Saved Links** is a part of the `Link Roundups Plugin <https://wordpress.org/plugins/link-roundups/>`_ that makes it easy to gather links from around the web and save them in WordPress. The Saved Links Widget allows you to create a list of links to pages anywhere on the web for display in a sidebar or other widget area.
-
-The Saved Links widget title defaults to "Recent Links" but you can change this as needed. You can set the number of Saved Links to display, adjust the excerpt length, show thumbnails of featured images, and add a More link with a url at the bottom of the widget.
+- `Link Roundups plugin <https://wordpress.org/plugins/link-roundups/>`_
+- `Doubleclick for Wordpress plugin <https://github.com/INN/DoubleClick-for-WordPress/>`_
+- `Analytic Bridge plugin <https://github.com/INN/analytic-bridge>`_
 
 Widgets Deprecated in 0.4x
 =========================
